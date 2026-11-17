@@ -9,25 +9,48 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
-from recommender import load_songs, recommend_songs
+from .recommender import load_songs, recommend_songs
+
+
+# User profiles used to evaluate the recommender
+PROFILES = {
+    "High-Energy Pop": {
+        "favorite_genre": "pop",
+        "favorite_mood": "happy",
+        "target_energy": 0.80,
+    },
+    "Chill Lofi": {
+        "favorite_genre": "lofi",
+        "favorite_mood": "chill",
+        "target_energy": 0.35,
+    },
+    "Intense Rock": {
+        "favorite_genre": "rock",
+        "favorite_mood": "intense",
+        "target_energy": 0.90,
+    },
+}
 
 
 def main() -> None:
-    songs = load_songs("data/songs.csv") 
+    songs = load_songs("data/songs.csv")
 
-    # Starter example profile
-    user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
+    for profile_name, user_prefs in PROFILES.items():
+        recommendations = recommend_songs(user_prefs, songs, k=5)
 
-    recommendations = recommend_songs(user_prefs, songs, k=5)
-
-    print("\nTop recommendations:\n")
-    for rec in recommendations:
-        # You decide the structure of each returned item.
-        # A common pattern is: (song, score, explanation)
-        song, score, explanation = rec
-        print(f"{song['title']} - Score: {score:.2f}")
-        print(f"Because: {explanation}")
         print()
+        print("=" * 60)
+        print(f"Profile: {profile_name}")
+        print(
+            f"(genre={user_prefs['favorite_genre']}, "
+            f"mood={user_prefs['favorite_mood']}, "
+            f"energy={user_prefs['target_energy']:.2f})"
+        )
+        print("=" * 60)
+
+        for rank, (song, score, explanation) in enumerate(recommendations, start=1):
+            print(f"{rank}. {song['title']} - Score: {score:.2f}")
+            print(f"   Because: {explanation}")
 
 
 if __name__ == "__main__":
