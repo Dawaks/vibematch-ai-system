@@ -1,0 +1,30 @@
+%% VibeMatch AI - System Architecture
+flowchart TD
+    User["User Profile<br/>(genre, mood, target energy)<br/>src/main.py"]
+    Guard["Input Validation / Guardrail<br/>src/reliability.py"]
+    Catalog[("Music Catalog<br/>data/songs.csv")]
+    Rec["Music Recommender<br/>src/recommender.py"]
+    Score["Scoring and Ranking<br/>src/recommender.py"]
+    Explain["Recommendation Explanations<br/>src/recommender.py"]
+    Reliab["Reliability Assessment<br/>src/reliability.py"]
+    Output["Final Recommendations<br/>+ Reliability Level<br/>src/main.py"]
+    Tests["Automated Tests<br/>tests/"]
+
+    User --> Guard
+    Guard -->|valid profile| Rec
+    Catalog --> Rec
+    Rec --> Score
+    Score --> Explain
+    Explain --> Reliab
+    Reliab --> Output
+
+    Tests -.->|tests| Rec
+    Tests -.->|tests| Guard
+    Tests -.->|tests| Reliab
+
+    classDef data fill:#eef6ff,stroke:#4a7ab8
+    classDef guard fill:#fff4e5,stroke:#c98a1a
+    classDef test fill:#f0f0f0,stroke:#777,stroke-dasharray: 4 3
+    class Catalog data
+    class Guard,Reliab guard
+    class Tests test
